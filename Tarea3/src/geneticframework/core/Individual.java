@@ -12,12 +12,20 @@ public abstract class Individual {
 	private List<Integer> genes;
 	
 	/** 
-	 * Public constructor.
+	 * Constructor for the class.
+	 * Can only be called by child classes.
 	 * Generates the genes for the individual.
 	 */
-	public Individual() {
+	protected Individual() {
 		genes = this.generateGenes();
 	}
+	
+	/**
+	 * Calls the constructor of the class.
+	 * Used as part of the template method for the Framework.
+	 * @return A new instance of the Class.
+	 */
+	public abstract Individual createInstance();
 	
 	/**
 	 * Generates a set of genes for the individual.
@@ -30,7 +38,7 @@ public abstract class Individual {
 	 * Crossover rate getter.
 	 * Defaults to 50%, but may be overridden by
 	 * child classes to modify it.
-	 * @return Default value for crossover rate.
+	 * @return Crossover rate value.
 	 */
 	public double uniformRate() {
 		return 0.5;
@@ -40,7 +48,7 @@ public abstract class Individual {
 	 * Mutation rate getter.
 	 * Defaults to 0.15%, but may be overridden by
 	 * child classes to modify it.
-	 * @return Default value for mutation rate.
+	 * @return Mutation rate value.
 	 */
 	public double mutationRate() {
 		return 0.015;
@@ -50,7 +58,7 @@ public abstract class Individual {
 	 * Number of genes getter.
 	 * Defaults to 64, but may be overridden by
 	 * child classes to modify it.
-	 * @return Default value for number of genes.
+	 * @return Number of genes.
 	 */
 	public int numberOfGenes() {
 		return 64;
@@ -72,14 +80,24 @@ public abstract class Individual {
 	 * @return A new individual --child of the receiver and argument--
 	 * that hasn't mutated yet.
 	 */
-	public abstract Individual crossOverWith(Individual individual);
+	public Individual crossOverWith(Individual individual){
+		Individual newIndividual = this.createInstance();
+		for (int index = 0; index < this.numberOfGenes(); index++){
+			if (Math.random() < this.uniformRate())
+				newIndividual.putGeneAt(this.geneAt(index), index);
+			else {
+				newIndividual.putGeneAt(individual.geneAt(index), index);
+			}
+		}
+		return newIndividual;
+	}
 	
 	/**
 	 * Sets a new gene in the specified position.
 	 * @param gene Gene to be inserted.
 	 * @param index Position of the gene.
 	 */
-	protected void putGeneAt(Integer gene, Integer index) {
+	private void putGeneAt(Integer gene, Integer index) {
 		genes.set(index, gene);
 	}
 	
@@ -89,7 +107,7 @@ public abstract class Individual {
 	 * @param index Position of the gene.
 	 * @return Gene located at position index.
 	 */
-	protected Integer geneAt(int index) {
+	private Integer geneAt(int index) {
 		return genes.get(index);
 	}
 	
@@ -98,7 +116,7 @@ public abstract class Individual {
 	 * desired solution.
 	 * The higher the number, the more fit the individual.
 	 * @param solution The target for the genetic algorithm.
-	 * @return Fitness of the individual
+	 * @return Fitness of the individual.
 	 */
 	public int fitness(List<Integer> solution) {
 		int score = 0;
