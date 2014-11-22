@@ -9,7 +9,14 @@ import java.util.List;
  */
 public abstract class Individual {
 	/** Genotype of the individual*/
-	private List<Integer> genes;
+	protected List<Integer> genes;
+	
+	/**
+	 * Number of genes.
+	 * Defaults to 64, but may be set using
+	 * setNumberOfGenes().
+	 */
+	protected int numberOfGenes = 64;
 	
 	/** 
 	 * Constructor for the class.
@@ -19,13 +26,6 @@ public abstract class Individual {
 	protected Individual() {
 		genes = this.generateGenes();
 	}
-	
-	/**
-	 * Calls the constructor of the class.
-	 * Used as part of the template method for the Framework.
-	 * @return A new instance of the Class.
-	 */
-	public abstract Individual createInstance();
 	
 	/**
 	 * Generates a set of genes for the individual.
@@ -55,13 +55,11 @@ public abstract class Individual {
 	}
 	
 	/**
-	 * Number of genes getter.
-	 * Defaults to 64, but may be overridden by
-	 * child classes to modify it.
-	 * @return Number of genes.
+	 * Number of genes setter.
+	 * @param newGeneNumber Desired number of genes.
 	 */
-	public int numberOfGenes() {
-		return 64;
+	public void setNumberOfGenes(int newGeneNumber) {
+		numberOfGenes = newGeneNumber;
 	}
 	
 	/**
@@ -74,22 +72,21 @@ public abstract class Individual {
 	
 	/**
 	 * Performs the crossover operation.
-	 * The receiver and the argument are the parents
-	 * of the new individual that is generated.
-	 * @param individual Partner for the crossover.
-	 * @return A new individual --child of the receiver and argument--
-	 * that hasn't mutated yet.
+	 * The arguments are the parents, while the receiver
+	 * is their child.
+	 * The child's genes are set according to the
+	 * uniform rate.
+	 * @param father Father for the crossover.
+	 * @param mother Mother for the crossover.
 	 */
-	public Individual crossOverWith(Individual individual){
-		Individual newIndividual = this.createInstance();
-		for (int index = 0; index < this.numberOfGenes(); index++){
+	public void childOf(Individual father, Individual mother) {
+		for (int index = 0; index < this.numberOfGenes; index++) {
 			if (Math.random() < this.uniformRate())
-				newIndividual.putGeneAt(this.geneAt(index), index);
+				this.putGeneAt(father.geneAt(index), index);
 			else {
-				newIndividual.putGeneAt(individual.geneAt(index), index);
+				this.putGeneAt(mother.geneAt(index), index);
 			}
 		}
-		return newIndividual;
 	}
 	
 	/**
@@ -97,7 +94,7 @@ public abstract class Individual {
 	 * @param gene Gene to be inserted.
 	 * @param index Position of the gene.
 	 */
-	private void putGeneAt(Integer gene, Integer index) {
+	protected void putGeneAt(Integer gene, Integer index) {
 		genes.set(index, gene);
 	}
 	
@@ -120,7 +117,7 @@ public abstract class Individual {
 	 */
 	public int fitness(List<Integer> solution) {
 		int score = 0;
-		for(int index = 0; index < this.numberOfGenes(); index++)
+		for(int index = 0; index < this.numberOfGenes; index++)
 			if(solution.get(index) == this.geneAt(index)) score++;
 		return score;
 	}
