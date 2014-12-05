@@ -1,8 +1,7 @@
 package genetic.wordguesser;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
+
 import genetic.framework.core.Individual;
 
 public class WordIndividual extends Individual {
@@ -30,14 +29,6 @@ public class WordIndividual extends Individual {
 		super(wordLength);
 	}
 	
-	@Override
-	public List<Integer> generateGenes() {
-		ArrayList<Integer> genes = new ArrayList<Integer>();
-		for (int i = 0; i < this.numberOfGenes; i++) {
-			genes.add(getRandomGene());
-		}
-		return genes;
-	}
 	/**
 	 * @return The word (String) that the genotype represents.
 	 */
@@ -49,18 +40,14 @@ public class WordIndividual extends Individual {
 		}
 		return sb.toString();
 	}
-	@Override
-	public void executeMutation(int index) {
-		genes.set(index, getRandomGene());
-	}
 	
 	/**
 	 * Generates a random gene.
 	 * To do this, a random index corresponding
-	 * to a position on the alphabet is generated
-	 * @return
+	 * to a position on the alphabet is generated.
 	 */
-	public int getRandomGene(){
+	@Override
+	public Integer generateRandomGene() {
 		int index = random.nextInt(alphabet.length());
 		return (int) (alphabet.charAt(index));
 	}

@@ -2,7 +2,6 @@ package genetic.framework.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import genetic.framework.core.*;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -32,16 +31,8 @@ public class GeneticTest {
 			public Individual createIndividual(){
 				return new Individual(){
 					@Override
-					public List<Integer> generateGenes() {
-						List<Integer> answer = new ArrayList<Integer>();
-						for(int i = 0; i < this.numberOfGenes; i++)
-							answer.add(Math.random()>=0.5?1:0);
-						return answer;
-					}
-					
-					@Override
-					public void executeMutation(int index) {
-						this.putGeneAt(Math.random()>=0.5?1:0, index);
+					public Integer generateRandomGene() {
+						return Math.random()>=0.5?1:0;
 					}
 				};
 			}
@@ -55,7 +46,7 @@ public class GeneticTest {
 	 */
 	@Test
 	public void geneticAlgorithmTest(){
-		population = Population.beginSimulation(population, 50, 20);
-		assertTrue(population.fittestIndividual().fitness(problem.solve()) > 50);
+		population = Population.beginSimulation(population, 50, 100);
+		assertTrue(population.fittestIndividual().fitness(problem.solve()) > 55);
 	}
 }

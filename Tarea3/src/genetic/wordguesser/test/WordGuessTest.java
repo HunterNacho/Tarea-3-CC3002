@@ -1,26 +1,40 @@
 package genetic.wordguesser.test;
 
-import genetic.framework.core.Individual;
-import genetic.framework.core.Population;
-import genetic.wordguesser.WordFactory;
-import genetic.wordguesser.WordGuesserProblem;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
+import genetic.wordguesser.Main;
+
 import org.junit.*;
+
 import static org.junit.Assert.*;
 
 public class WordGuessTest {
+	private String result;
+	private PrintStream testOut;
+	
+	@Before
+	public void setUp() {
+		result = "";
+		OutputStream nullOutputStream = new OutputStream () {
+			@Override
+			public void write(int b) throws IOException {}
+		};
+		testOut = new PrintStream (nullOutputStream) {
+			@Override
+			public void println(String string) {result = result + string + "\n";}
+		};
+	}
+	
 	@Test
-	public void MainTest(){
-		String guessWord = "Test";
-		int populationSize = 50;
-		int loopCount = 1000;
-		WordGuesserProblem problem = new WordGuesserProblem(guessWord);
-		WordFactory factory = new WordFactory();
-		factory.setWordLength(guessWord.length());
-		Population population = new Population(factory, problem);
-		population.setElitism(2);
-		population = Population.beginSimulation
-				(population, populationSize, loopCount);
-		Individual result = population.fittestIndividual();
-		assertEquals(guessWord, result.genesAsString());
+	public void mainTest(){
+		Main.setOutput(testOut);
+		String[] args = {"Test", "50", "1000"};
+		Main.main(args);
+		assertEquals("After 1000 iterations the result was:\n"
+				+ "\tExpected: Test\n"
+				+ "\tGot: Test\n"
+				+ "\tHit rate: 100.0%\n", result);
 	}
 }

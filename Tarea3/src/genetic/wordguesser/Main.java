@@ -1,5 +1,7 @@
 package genetic.wordguesser;
 
+import java.io.PrintStream;
+
 import genetic.framework.core.Individual;
 import genetic.framework.core.Population;
 
@@ -11,6 +13,19 @@ import genetic.framework.core.Population;
  *
  */
 public class Main {
+	/**
+	 * Output for the simulation.
+	 * May be changed for testing purposes.
+	 */
+	private static PrintStream output = System.out;
+	
+	/**
+	 * Output setter. Used for testing purposes.
+	 * @param newOut Desired output.
+	 */
+	public static void setOutput(PrintStream newOut) {
+		output = newOut;
+	}
 	/**
 	 * Executes the genetic algorithm that attempts to guess a word.
 	 * @param args Console arguments.
@@ -30,10 +45,10 @@ public class Main {
 		population = Population.beginSimulation
 				(population, populationSize, loopCount);
 		Individual result = population.fittestIndividual();
-		System.out.println("After "+loopCount+" iterations the result was:");
-		System.out.println("\tExpected: " + guessWord);
-		System.out.println("\tGot: " + result.genesAsString());
-		System.out.println("\tHit rate: " + (100.0 * result.fitness(problem.solve())) / guessWord.length() + " %");
+		output.println("After "+loopCount+" iterations the result was:");
+		output.println("\tExpected: " + guessWord);
+		output.println("\tGot: " + result.genesAsString());
+		output.println("\tHit rate: " + (100.0 * result.fitness(problem.solve())) / guessWord.length() + "%");
 	}
 
 }

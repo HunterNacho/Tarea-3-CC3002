@@ -1,5 +1,6 @@
 package genetic.framework.core;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Framework class for the individuals, i.e. any of the basic entities
@@ -23,7 +24,7 @@ public abstract class Individual {
 	 * Constructor for the class.
 	 * Can only be called by child classes.
 	 * Sets a number of genes and then generates them.
-	 * @param numberOfGenes
+	 * @param numberOfGenes Number of genes for the individual.
 	 */
 	protected Individual(int numberOfGenes){
 		this.numberOfGenes = numberOfGenes;
@@ -44,8 +45,19 @@ public abstract class Individual {
 	 * @return An integer list which contains the genes of the
 	 * individual.
 	 */
-	public abstract List<Integer> generateGenes();
+	private List<Integer> generateGenes() {
+		List<Integer> answer = new ArrayList<Integer>();
+		for(int i = 0; i < this.numberOfGenes; i++)
+			answer.add(generateRandomGene());
+		return answer;
+	}
 	
+	/**
+	 * Generates a random gene according to the individual
+	 * implementation.
+	 * @return A new, randomly generated gene represented as an integer.
+	 */
+	public abstract Integer generateRandomGene();
 	/**
 	 * Crossover rate getter.
 	 * Defaults to 50%, but may be overridden by
@@ -54,6 +66,14 @@ public abstract class Individual {
 	 */
 	public double uniformRate() {
 		return 0.5;
+	}
+	
+	/**
+	 * Number of genes getter.
+	 * @return Number of genes attribute.
+	 */
+	public int numberOfGenes(){
+		return numberOfGenes;
 	}
 	
 	/**
@@ -75,14 +95,8 @@ public abstract class Individual {
 	public void mutate(){
 		for(int index = 0; index < this.numberOfGenes; index++)
 			if (Math.random() < this.mutationRate())
-				this.executeMutation(index);
+				this.putGeneAt(generateRandomGene(), index);
 	}
-	
-	/**
-	 * Sets a new, randomly generated gene on position index.
-	 * @param index Index of the gene to be mutated.
-	 */
-	public abstract void executeMutation(int index);
 	
 	/**
 	 * Performs the crossover operation.
@@ -118,7 +132,7 @@ public abstract class Individual {
 	 * @param index Position of the gene.
 	 * @return Gene located at position index.
 	 */
-	private Integer geneAt(int index) {
+	public Integer geneAt(int index) {
 		return genes.get(index);
 	}
 	
@@ -145,5 +159,13 @@ public abstract class Individual {
 		StringBuilder sb = new StringBuilder();
 		for(Integer i : genes) sb.append(i);
 		return sb.toString();
+	}
+	
+	/**
+	 * Genes getter. Used mostly for testing purposes.
+	 * @return Genes attribute.
+	 */
+	public List<Integer> getGenes() {
+		return genes;
 	}
 }

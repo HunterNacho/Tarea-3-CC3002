@@ -1,0 +1,7 @@
+genetic.framework.core
+genetic.framework.test
+genetic.mazesolver
+genetic.mazesolver.graphicdisplay
+genetic.mazesolver.test
+genetic.wordguesser
+genetic.wordguesser.test

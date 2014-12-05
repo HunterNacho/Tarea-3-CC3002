@@ -54,6 +54,7 @@ public class Population {
 	 * Public constructor.
 	 * Sets the Individual factory.
 	 * @param individualFactory An instance from a class
+	 * @param problem Problem model for the algorithm.
 	 * that implements IndividualFactory.
 	 * Used to create the population's individuals.
 	 */
@@ -188,6 +189,15 @@ public class Population {
 		return this.individuals.get(1);
 	}
 	
+	/**
+	 * Static method that begins the population simulation.
+	 * @param population Initial population for the simulation.
+	 * @param populationSize Size for all the generations of population.
+	 * @param loopCount Number of evolution iterations.
+	 * @return The final population, i.e. the result of evolving 
+	 * (through natural selection, crossover and mutation) the 
+	 * initial population.
+	 */
 	public static Population beginSimulation(Population population, int populationSize, int loopCount){
 		population.generatePopulation(populationSize);
 		for(int loop = 0; loop < loopCount; loop++) {
